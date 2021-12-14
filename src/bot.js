@@ -43,8 +43,12 @@ let scheduledMessage = new cron.CronJob(
 scheduledMessage.start();
 
 client.on("message", async (message) => {
-	if (message.author.bot) return;
+	if (message.author.bot) {
+		console.log("This is a bot");
+		return;
+	}
 	if (message.content.startsWith(PREFIX)) {
+		console.log("This is a command");
 		const [CMD_NAME, ...args] = message.content.trim().substring(PREFIX.length).split(/\s+/);
 		switch (CMD_NAME) {
 			case "set": {
@@ -74,8 +78,9 @@ client.on("message", async (message) => {
 
 			case "help": {
 				message.channel.send(
-					"!set (normal/nsfw): set the current channel to post images here. Nsfw pictures will be posted to nsfw channel.\n!github: get the GitHub link to the repository"
+					"```!set (normal/nsfw): set the current channel to post images here. Nsfw pictures will be posted to nsfw channel.\n!github: get the GitHub link to the repository\n!help: display this message.```"
 				);
+				break;
 			}
 
 			default: {

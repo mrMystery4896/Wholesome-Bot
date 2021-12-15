@@ -12,7 +12,7 @@ let scheduledMessage = new cron.CronJob(
 	"0 0 2,14 * * *",
 	async () => {
 		console.log("Running scheduler");
-		console.log(await client.channel.fetch(normalChannel));
+		console.log(await client.channels.fetch(normalChannel));
 		console.log(await client.channels.fetch(nsfwChannel));
 		if (normalChannel) {
 			console.log("Fetching data...");

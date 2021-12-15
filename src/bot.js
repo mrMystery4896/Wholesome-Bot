@@ -9,10 +9,13 @@ let normalChannel;
 let nsfwChannel;
 
 let scheduledMessage = new cron.CronJob(
-	"0 05 10,22 * * *",
+	"0 0 2,14 * * *",
 	async () => {
+		console.log("Running scheduler");
+		console.log(await client.channel.fetch(normalChannel));
+		console.log(await client.channels.fetch(nsfwChannel));
 		if (normalChannel) {
-			console.log("Running function...");
+			console.log("Fetching data...");
 			let attachment;
 			let channel;
 			let result = await getRandomImage();

@@ -9,17 +9,16 @@ let normalChannel;
 let nsfwChannel;
 
 let scheduledMessage = new cron.CronJob(
-	"0 0 2,14 * * *",
+	"0 0 7,19 * * *",
 	async () => {
 		console.log("Running scheduler");
-		console.log(await client.channels.fetch(normalChannel));
-		console.log(await client.channels.fetch(nsfwChannel));
 		if (normalChannel) {
 			console.log("Fetching data...");
 			let attachment;
 			let channel;
 			let result = await getRandomImage();
-			if (result === "error") return message.channel.send("error");
+			console.log("results", result);
+			if (result === "error") return console.log("error");
 			//if result is nsfw and there is no nsfw channel, repeat the loop to attempt to find a non-nsfw image
 			while (result.nsfw && !nsfwChannel) {
 				result = await getRandomImage();

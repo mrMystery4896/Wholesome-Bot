@@ -9,7 +9,7 @@ let normalChannel;
 let nsfwChannel;
 
 let scheduledMessage = new cron.CronJob(
-	"*/10 * * * * *",
+	"0 0 7,19 * * *",
 	async () => {
 		var currentdate = new Date();
 		var datetime =

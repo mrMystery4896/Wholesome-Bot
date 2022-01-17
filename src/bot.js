@@ -9,21 +9,33 @@ let normalChannel;
 let nsfwChannel;
 
 let scheduledMessage = new cron.CronJob(
-	"0 0 7,19 * * *",
+	"*/10 * * * * *",
 	async () => {
-		console.log("Running scheduler");
+		var currentdate = new Date();
+		var datetime =
+			currentdate.getDate() +
+			"/" +
+			(currentdate.getMonth() + 1) +
+			"/" +
+			currentdate.getFullYear() +
+			" @ " +
+			currentdate.getHours() +
+			":" +
+			currentdate.getMinutes() +
+			":" +
+			currentdate.getSeconds();
+		console.log("Running scheduler at ", datetime);
+		console.log("Normal Channel", normalChannel);
+		console.log("nsfw Channel", nsfwChannel);
 		if (normalChannel) {
 			console.log("Fetching data...");
 			let attachment;
 			let channel;
 			let result = await getRandomImage();
-			console.log("results", result);
 			if (result === "error") return console.log("error");
 			//if result is nsfw and there is no nsfw channel, repeat the loop to attempt to find a non-nsfw image
 			while (result.nsfw && !nsfwChannel) {
 				result = await getRandomImage();
-				console.log(result.nsfw);
-				console.log(nsfwChannel);
 			}
 			if (result.nsfw) {
 				channel = await client.channels.fetch(nsfwChannel);
@@ -36,6 +48,7 @@ let scheduledMessage = new cron.CronJob(
 				attachment = new MessageAttachment(sfbuff, "image.jpg");
 				channel.send(attachment);
 			});
+			console.log("Image Sent");
 		}
 	},
 	null,
@@ -46,11 +59,9 @@ scheduledMessage.start();
 
 client.on("message", async (message) => {
 	if (message.author.bot) {
-		console.log("This is a bot");
 		return;
 	}
 	if (message.content.startsWith(PREFIX)) {
-		console.log("This is a command");
 		const [CMD_NAME, ...args] = message.content.trim().substring(PREFIX.length).split(/\s+/);
 		switch (CMD_NAME) {
 			case "set": {
@@ -62,6 +73,7 @@ client.on("message", async (message) => {
 				if (channelType === "normal") {
 					normalChannel = message.channel.id;
 					message.channel.send("This channel has been set to the normal channel");
+					console.log(message.channel.id, message.channel.name);
 				} else if (channelType === "nsfw") {
 					nsfwChannel = message.channel.id;
 					message.channel.send("This channel has been set to the nsfw channel");

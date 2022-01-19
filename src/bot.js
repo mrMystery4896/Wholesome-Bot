@@ -7,8 +7,10 @@ const fs = require("fs");
 const client = new Client();
 const PREFIX = "!";
 
-let rawData = fs.readFileSync("channels.json");
-let channels = JSON.parse(rawData);
+let channels = {
+	normalChannel: 710855554003632180n,
+	nsfwChannel: 731515150011727983n,
+};
 
 let scheduledMessage = new cron.CronJob(
 	"0 0 7,19 * * *",
@@ -75,13 +77,9 @@ client.on("message", async (message) => {
 				if (channelType === "normal") {
 					channels.normalChannel = message.channel.id;
 					message.channel.send("This channel has been set to the normal channel");
-					let data = JSON.stringify(channels);
-					fs.writeFileSync("channels.json", data);
 					console.log(message.channel.id, message.channel.name);
 				} else if (channelType === "nsfw") {
 					channels.nsfwChannel = message.channel.id;
-					let data = JSON.stringify(channels);
-					fs.writeFileSync("channels.json", data);
 					message.channel.send("This channel has been set to the nsfw channel");
 				} else {
 					message.channel.send("Invalid channel type. Please specify if it is normal or nsfw");
